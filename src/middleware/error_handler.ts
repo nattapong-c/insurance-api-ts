@@ -1,0 +1,9 @@
+import { ErrorRequestHandler, Request, Response, NextFunction } from "express";
+import { Error400 } from "../utils/error";
+
+const handler = (err: ErrorRequestHandler, req: Request, res: Response, nex: NextFunction) => {
+    if (err instanceof Error400) {
+        return res.status(400).send({ error: err.message, data: err });
+    }
+};
+export default handler;
