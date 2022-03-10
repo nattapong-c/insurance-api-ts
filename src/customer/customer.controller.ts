@@ -4,7 +4,25 @@ import { Customer, CustomerQuery } from "./customer.model";
 export const getCustomers = async (req: Request, res: Response): Promise<void> => {
     const { plate_number, page, size } = req.query as CustomerQuery;
     const response = await Customer.getList(plate_number, page, size);
-    res.send(response)
+    res.send(response);
 }
 
-// export const 
+export const createCustomer = async (req: Request, res: Response): Promise<void> => {
+    const response = await Customer.create(req.body);
+    res.send(response);
+}
+
+export const updateCustomer = async (req: Request, res: Response) => {
+    const { customerId } = req.params;
+    const response = await Customer.update(customerId, req.body);
+    res.send(response);
+}
+
+
+export const deleteCustomer = async (req: Request, res: Response) => {
+    const id_list = req.query.id_list as string[];
+    if (!id_list) return res.status(400).send("missing id_list");
+    var idList: string[] = Array.isArray(id_list) ? id_list : [id_list];
+    const response = await Customer.delete(idList);
+    res.send(response);
+}

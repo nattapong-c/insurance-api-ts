@@ -1,11 +1,21 @@
 import { Error400 } from "../utils/error";
-import customer from "../schema/Customer";
-import { PipelineStage, Aggregate } from "mongoose";
+import CustomerSchema from "../schema/Customer";
+import { PipelineStage, ObjectId } from "mongoose";
 
 export interface CustomerQuery {
     plate_number?: string,
     page?: string,
     size?: string
+}
+
+export interface CustomerCreate {
+    plate_number: string,
+    name: string
+}
+
+export interface CustomerUpdate {
+    plate_number?: string,
+    name?: string
 }
 
 class CustomerListResponse {
@@ -18,8 +28,24 @@ class CustomerListResponse {
     }
 }
 
+class CustomerResponse {
+    message: string = "get customer success";
+    data?: Customer;
+
+    constructor(message: string, data?: Customer) {
+        this.message = message;
+        this.data = data;
+    }
+}
+
 export class Customer {
-    // constructor(plate_number: string, name: string) { }
+    _id?: ObjectId;
+    plate_number: string;
+    name: string;
+    constructor(plate_number: string, name: string) {
+        this.plate_number = plate_number;
+        this.name = name;
+    }
 
     public static async getList(plateNumber?: string, page?: string, size?: string): Promise<CustomerListResponse> {
         if (page && Number.parseInt(page) < 1) throw new Error400("page must be positive number");
@@ -49,10 +75,31 @@ export class Customer {
                 }
             });
         }
-        const data = await customer.aggregate(aggregates);
+        const data = await CustomerSchema.aggregate(aggregates);
         const list = data[0].total_item ? data[0].customers : data;
         const totalItem = data[0].total_item ? data[0].total_item[0].count : data.length
 
         return new CustomerListResponse(list, totalItem);
+    }
+
+    public static async create(customerCreate: CustomerCreate) {
+        var newCustomer = new Customer(customerCreate.plate_number, customerCreate.name);
+        newCustomer = await CustomerSchema.create(newCustomer);
+        return new CustomerResponse("create customer success", newCustomer);
+    }
+
+    public static async update(id: string, customerUpdate: CustomerUpdate) {
+        var customer = await CustomerSchema.findByIdAndUpdate(
+            { _id: id },
+            { $set: customerUpdate },
+            { new: true }
+        );
+        if (!customer) throw new Error400("customer not found");
+        return new CustomerResponse("update customer success", customer);
+    }
+
+    public static async delete(idList: string[]) {
+        await CustomerSchema.deleteMany({ _id: { $in: idList } });
+        return new CustomerResponse("delete customer success");
     }
 }
