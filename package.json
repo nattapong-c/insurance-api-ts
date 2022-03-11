@@ -9,7 +9,8 @@
   "scripts": {
     "start": "node build/app.js",
     "dev": "ts-node-dev src/app.ts",
-    "build": "tsc && cp src/.env build/.env && echo USE_JS=true >> build/.env",
+    "build": "tsc",
+    "build_local": "tsc && cp src/.env build/.env && echo USE_JS=true >> build/.env",
     "index_db": "ts-node src/database/index_db.ts"
   },
   "devDependencies": {
