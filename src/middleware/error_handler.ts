@@ -5,5 +5,7 @@ const handler = (err: ErrorRequestHandler, req: Request, res: Response, nex: Nex
     if (err instanceof Error400) {
         return res.status(400).send({ error: err.message, data: err });
     }
+
+    res.status(500).send({ error: "Unhandled!" });
 };
 export default handler;
