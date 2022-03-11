@@ -6,6 +6,6 @@ const handler = (err: ErrorRequestHandler, req: Request, res: Response, nex: Nex
         return res.status(400).send({ error: err.message, data: err });
     }
 
-    res.status(500).send({ error: "Unhandled!" });
+    res.status(500).send({ error: "Unhandled!", data: err });
 };
 export default handler;
