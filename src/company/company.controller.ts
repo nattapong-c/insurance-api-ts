@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Company, CompanyQuery, CompanyCreate } from "./company.model";
+import { Company, CompanyQuery } from "./company.model";
 
 export const getCompanies = async (req: Request, res: Response): Promise<void> => {
     const query = req.query as CompanyQuery;
