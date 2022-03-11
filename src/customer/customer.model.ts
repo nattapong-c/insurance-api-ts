@@ -83,13 +83,18 @@ export class Customer {
         return new CustomerListResponse(list, totalItem);
     }
 
-    public static async create(customerCreate: CustomerCreate) {
+    public static async create(customerCreate: CustomerCreate): Promise<CustomerResponse> {
         var newCustomer = new Customer(customerCreate.plate_number, customerCreate.name);
-        newCustomer = await CustomerSchema.create(newCustomer);
-        return new CustomerResponse("create customer success", newCustomer);
+        try {
+            newCustomer = await CustomerSchema.create(newCustomer);
+            return new CustomerResponse("create customer success", newCustomer);
+        } catch (err: unknown) {
+            var error = err as Error;
+            throw new Error400(error.message);
+        }
     }
 
-    public static async update(id: string, customerUpdate: CustomerUpdate) {
+    public static async update(id: string, customerUpdate: CustomerUpdate): Promise<CustomerResponse> {
         var customer = await CustomerSchema.findByIdAndUpdate(
             { _id: id },
             { $set: customerUpdate },
@@ -99,7 +104,7 @@ export class Customer {
         return new CustomerResponse("update customer success", customer);
     }
 
-    public static async delete(idList: string[]) {
+    public static async delete(idList: string[]): Promise<CustomerResponse> {
         await CustomerSchema.deleteMany({ _id: { $in: idList } });
         return new CustomerResponse("delete customer success");
     }
