@@ -38,7 +38,7 @@ const exportPDF = (res: Response, invoice: Invoice) => {
         company_address: invoice.company_address,
         company_id: invoice.company_id
     };
-    let directory = path.join(__dirname, `../template/invoice.html`);
+    let directory = path.join(__dirname, `../../../template/invoice.html`);
     let html = mustache.render(fs.readFileSync(directory, "utf8"), invoiceData);
     try {
         pdf.create(html, { format: "A4" }).toBuffer(async (err, buffer) => {
