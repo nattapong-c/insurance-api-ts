@@ -3,7 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "engines": {
+    "yarn": "1.22.x"
+  },
   "scripts": {
+    "start": "ts-node src/app.ts",
     "dev": "ts-node-dev src/app.ts",
     "build": "tsc",
     "index_db": "ts-node src/database/index_db.ts"
