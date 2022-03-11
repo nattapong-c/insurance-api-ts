@@ -71,3 +71,11 @@ export const exportInvoice = async (req: Request, res: Response) => {
     const invoice = await Invoice.get(invoiceNumber);
     return exportPDF(res, invoice);
 }
+
+export const getInvoiceOverview = async (req: Request, res: Response): Promise<any> => {
+    const data = await Invoice.info();
+    return res.send({
+        message: "get info success",
+        data
+    });
+}

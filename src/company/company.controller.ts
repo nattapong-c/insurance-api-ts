@@ -25,3 +25,13 @@ export const deleteCompany = async (req: Request, res: Response): Promise<any> =
     const response = await Company.delete(idList);
     res.send(response);
 }
+
+export const getCompanyOverview = async (req: Request, res: Response): Promise<any> => {
+    const count = await Company.count();
+    return res.send({
+        message: "get info success",
+        data: {
+            count
+        }
+    });
+}

@@ -111,4 +111,8 @@ export class Customer {
         await CustomerSchema.deleteMany({ _id: { $in: idList } });
         return new CustomerResponse("delete customer success");
     }
+
+    public static async count(): Promise<number> {
+        return await CustomerSchema.countDocuments();
+    }
 }

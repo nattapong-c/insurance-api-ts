@@ -270,4 +270,13 @@ export class Invoice {
         await InvoiceSchema.deleteMany({ _id: { $in: idList } });
         return new InvoiceResponse("delete company success");
     }
+
+    public static async info(): Promise<any> {
+        const [count, latestNumber] = await Promise.all([
+            InvoiceSchema.countDocuments(),
+            InvoiceSchema.findOne().sort({ invoice_no: -1 })
+        ]);
+        return { count, latest_number: latestNumber ? latestNumber.invoice_no : 100 }
+    }
+
 }

@@ -118,4 +118,8 @@ export class Company {
         await CompanySchema.deleteMany({ _id: { $in: idList } });
         return new CompanyResponse("delete company success");
     }
+
+    public static async count(): Promise<number> {
+        return await CompanySchema.countDocuments();
+    }
 }
