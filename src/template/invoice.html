@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ใบวางบิล {{invoice_no}}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sarabun:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        padding: 10px 30px;
+        font-size: 10px;
+        font-family: "Sarabun", "sans-serif";
+        font-weight: 400;
+      }
+
+      table td:first-child,
+      table td.bold {
+        font-weight: 700;
+      }
+
+      table td.padding-left {
+        padding-left: 1rem;
+      }
+
+      table td.fixed-width {
+        width: 50px;
+      }
+
+      #header {
+        display: -webkit-flex;
+        display: flex;
+        justify-content: flex-end;
+        -webkit-justify-content: flex-end;
+      }
+      #header div {
+        border: 1px solid #000;
+        border-radius: 10px;
+        padding: 0 30px;
+      }
+
+      #customer-info {
+        display: -webkit-flex;
+        display: flex;
+        justify-content: space-between;
+        -webkit-justify-content: space-between;
+        margin-top: 1rem;
+      }
+
+      #customer-info div {
+        border: 1px solid #000;
+        border-radius: 10px;
+        padding: 10px 15px;
+      }
+
+      #customer-info div:first-child {
+        width: 64%;
+      }
+
+      #doc-info {
+        margin-top: 1rem;
+        border: 1px solid #000;
+        border-radius: 10px;
+      }
+
+      #insurance-info {
+        display: -webkit-flex;
+        display: flex;
+        justify-content: space-between;
+        -webkit-justify-content: space-between;
+        padding: 20px 15px;
+      }
+
+      #price-info {
+        width: 100%;
+      }
+
+      #price-info table {
+        border-top: 1px solid #000;
+        /* border-bottom: 1px solid #000; */
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      #price-info table td {
+        padding: 5px 15px;
+      }
+
+      #price-info table tr.border-bottom {
+        border-bottom: 1px solid #000;
+      }
+
+      #price-info table tr.border-bottom td {
+        padding-bottom: 15px;
+      }
+
+      #price-info table tr.first-section-row td {
+        padding-top: 15px;
+      }
+
+      #price-info table td:last-child {
+        text-align: end;
+      }
+
+      #price-info table td.border-left {
+        border-left: 1px solid #000;
+      }
+
+      #remark {
+        padding: 10px 15px;
+      }
+
+      #footer-info {
+        margin-top: 1rem;
+        padding: 0 15px;
+      }
+
+      #signature {
+        display: -webkit-flex;
+        display: flex;
+        justify-content: flex-end;
+        -webkit-justify-content: flex-end;
+      }
+
+      #signature div {
+        text-align: center;
+      }
+
+      #signature div p:first-child {
+        margin-bottom: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <section id="header">
+      <div>
+        <h1>ใบวางบิล</h1>
+      </div>
+    </section>
+    <section id="customer-info">
+      <div>
+        <table>
+          <tr>
+            <td class="fixed-width">ชื่อลูกค้า</td>
+            <td>{{{customer_name}}}</td>
+          </tr>
+        </table>
+      </div>
+      <div>
+        <table>
+          <tr>
+            <td>เลขที่</td>
+            <td>{{invoice_no}}</td>
+          </tr>
+          <tr>
+            <td>วันที่</td>
+            <td>{{issue_date}}</td>
+          </tr>
+        </table>
+      </div>
+    </section>
+    <section id="doc-info">
+      <div id="insurance-info">
+        <div class="left-info">
+          <table>
+            <tr>
+              <td>ประเภทการประกันภัย</td>
+              <td>{{insurance_type}}</td>
+            </tr>
+            <tr>
+              <td>ทุนประกันภัย</td>
+              <td>{{insurance_amount}}</td>
+            </tr>
+            <tr>
+              <td>ผู้รับประกัน</td>
+              <td>{{insurance_receiver}}</td>
+            </tr>
+          </table>
+        </div>
+        <div class="right-info">
+          <table>
+            <tr>
+              <td>กรมธรรม์เลขที่</td>
+              <td>{{insurance_no}}</td>
+            </tr>
+            <tr>
+              <td>พ.ร.บ.เลขที่</td>
+              <td>{{act_no}}</td>
+            </tr>
+            <tr>
+              <td>ทะเบียน</td>
+              <td>{{plate_no}}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div id="price-info">
+        <table>
+          <tr class="first-section-row">
+            <td colspan="2">เบี้ยประกันภัย</td>
+            <td colspan="2" class="border-left">{{amount}}</td>
+          </tr>
+          <tr>
+            <td colspan="2">เบี้ยประกันภัยบังคับตามพ.ร.บ.ฯ</td>
+            <td colspan="2" class="border-left">{{amount_act}}</td>
+          </tr>
+          <tr class="border-bottom">
+            <td colspan="2">อากรแสตมป์</td>
+            <td colspan="2" class="border-left">{{amount_stamp}}</td>
+          </tr>
+          <tr class="first-section-row">
+            <td colspan="2">รวม</td>
+            <td colspan="2" class="border-left">{{total_amount_1}}</td>
+          </tr>
+          <tr class="border-bottom">
+            <td colspan="2">ภาษีมูลค่าเพิ่ม 7%</td>
+            <td colspan="2" class="border-left">{{vat_7}}</td>
+          </tr>
+          <tr class="first-section-row">
+            <td colspan="2">รวมทั้งสิ้น</td>
+            <td colspan="2" class="border-left">{{total_amount_2}}</td>
+          </tr>
+          <tr class="border-bottom">
+            <td colspan="2">หักภาษี ณ ที่จ่าย</td>
+            <td colspan="2" class="border-left">{{vat_at_paid}}</td>
+          </tr>
+          <tr class="border-bottom first-section-row">
+            <td colspan="2">รวมเงินที่ต้องชำระ</td>
+            <td colspan="2" class="border-left">{{total_amount_3}}</td>
+          </tr>
+          <tr class="border-bottom first-section-row">
+            <td>คุ้มครองตั้งแต่วันที่</td>
+            <td>{{start_date}}</td>
+            <td class="bold">หมดอายุ</td>
+            <td>{{end_date}}</td>
+          </tr>
+        </table>
+      </div>
+      <div id="remark">
+        <table>
+          <tr>
+            <td>หมายเหตุ</td>
+            <td class="padding-left">
+              หนังสือรับรองการหัก ณ ที่จ่ายออกในนาม {{company_name}} <br />
+              {{company_address}}
+            </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td class="padding-left">
+              เลขประจำตัวผู้เสียภาษีอากร {{company_id}}
+            </td>
+          </tr>
+        </table>
+      </div>
+    </section>
+    <section id="footer-info">
+      <div>
+        <p>
+          * กรณีสั่งจ่ายเป็นเช็คธนาคาร โปรดสั่งจ่ายเป็นเช็คขีดคร่อมในนาม
+          “นิจกานต์ ชาตพุทธิธรกุล” หรือโอนผ่านบัญชี ธนาคาร ไทยพาณิชย์
+          บัญชีออมทรัพย์ <br />สาขาลาดหญ้า เลขที่บัญชี 012-253140-8
+        </p>
+      </div>
+      <div id="signature">
+        <div>
+          <p>ขอแสดงความนับถือ</p>
+          <p>..............................................</p>
+          <p>(นิจกานต์ ชาตพุทธิธรกุล)</p>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>
