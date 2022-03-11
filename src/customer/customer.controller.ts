@@ -12,14 +12,14 @@ export const createCustomer = async (req: Request, res: Response): Promise<void>
     res.send(response);
 }
 
-export const updateCustomer = async (req: Request, res: Response) => {
+export const updateCustomer = async (req: Request, res: Response): Promise<void> => {
     const { customerId } = req.params;
     const response = await Customer.update(customerId, req.body);
     res.send(response);
 }
 
 
-export const deleteCustomer = async (req: Request, res: Response) => {
+export const deleteCustomer = async (req: Request, res: Response): Promise<any> => {
     const id_list = req.query.id_list as string[];
     if (!id_list) return res.status(400).send("missing id_list");
     var idList: string[] = Array.isArray(id_list) ? id_list : [id_list];
