@@ -9,7 +9,6 @@ const schema = new Schema<Customer>(
     { collection: "customer" }
 );
 
-// @ts-ignore
-if (!global.describe) schema.index({ plate_number: 1 }, { unique: true });
 
+schema.index({ plate_number: 1 }, { unique: true });
 export default model("customer", schema);
