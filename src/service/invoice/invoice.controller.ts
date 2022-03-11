@@ -2,8 +2,8 @@ import { Request, Response } from "express";
 import { Invoice, InvoiceQuery } from "./invoice.model";
 import mustache from "mustache";
 import pdf from "html-pdf";
-import { convertToThaiDate } from "../utils/date";
-import { formatNumber2Decimal } from "../utils/number";
+import { convertToThaiDate } from "../../utils/date";
+import { formatNumber2Decimal } from "../../utils/number";
 import path from "path";
 import fs from "fs";
 

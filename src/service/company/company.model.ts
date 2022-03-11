@@ -1,5 +1,5 @@
-import { Error400 } from "../utils/error";
-import CompanySchema from "../schema/Company";
+import { Error400 } from "../../utils/error";
+import CompanySchema from "../../schema/Company";
 import { PipelineStage, ObjectId } from "mongoose";
 
 export interface CompanyQuery {

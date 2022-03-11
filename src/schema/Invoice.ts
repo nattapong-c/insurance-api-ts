@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { Invoice } from '../invoice/invoice.model';
+import { Invoice } from '../service/invoice/invoice.model';
 
 const schema = new Schema<Invoice>(
     {
