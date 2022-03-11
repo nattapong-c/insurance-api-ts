@@ -84,9 +84,10 @@ export class Customer {
     }
 
     public static async create(customerCreate: CustomerCreate): Promise<CustomerResponse> {
-        var newCustomer = new Customer(customerCreate.plate_number, customerCreate.name);
         if (!customerCreate.name) throw new Error400("missing name");
         if (!customerCreate.plate_number) throw new Error400("missing plate_number");
+        
+        var newCustomer = new Customer(customerCreate.plate_number, customerCreate.name);
         try {
             newCustomer = await CustomerSchema.create(newCustomer);
             return new CustomerResponse("create customer success", newCustomer);
