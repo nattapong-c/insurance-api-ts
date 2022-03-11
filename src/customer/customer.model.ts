@@ -47,13 +47,14 @@ export class Customer {
         this.name = name;
     }
 
-    public static async getList(plateNumber?: string, page?: string, size?: string): Promise<CustomerListResponse> {
+    public static async getList(customerQuery: CustomerQuery): Promise<CustomerListResponse> {
+        const { plate_number, page, size } = customerQuery;
         if (page && Number.parseInt(page) < 1) throw new Error400("page must be positive number");
         if (size && Number.parseInt(size) < 1) throw new Error400("size must be positive number");
         var query = {};
         var aggregates: PipelineStage[] = [];
 
-        if (plateNumber) query = { plate_number: { $regex: new RegExp(`${plateNumber}`) } };
+        if (plate_number) query = { plate_number: { $regex: new RegExp(`${plate_number}`) } };
         aggregates.push({ $match: query });
         if (page !== undefined && size !== undefined) {
             aggregates.push({
