@@ -77,8 +77,8 @@ export class Customer {
             });
         }
         const data = await CustomerSchema.aggregate(aggregates);
-        const list = data[0].total_item ? data[0].customers : data;
-        const totalItem = data[0].total_item ? data[0].total_item[0].count : list.length;
+        const list = data.length > 0 && data[0].total_item ? data[0].customers : data;
+        const totalItem = data.length > 0 && data[0].total_item && data[0].total_item[0] ? data[0].total_item[0].count : list.length;
 
         return new CustomerListResponse(list, totalItem);
     }
