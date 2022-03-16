@@ -84,7 +84,7 @@ export class Company {
         }
         const data = await CompanySchema.aggregate(aggregates);
         const list = data[0].total_item ? data[0].companies : data;
-        const totalItem = data[0].total_item[0] ? data[0].total_item[0].count : list.length;
+        const totalItem = data[0].total_item ? data[0].total_item[0].count : list.length;
 
         return new CompanyListResponse(list, totalItem);
     }
