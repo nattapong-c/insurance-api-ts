@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            padding-top: 50px;
+            font-size: 20px;
+        }
+
+        .header {
+            text-align: center;
+        }
+
+        .content {
+            display: -webkit-flex;
+            display: flex;
+            justify-content: center;
+            -webkit-justify-content: center;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 1200px;
+        }
+
+        td {
+            padding: 15px 10px;
+        }
+
+        .content tr:first-child {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+
+<body>
+    <section class="header">
+        <p>ใบเสนอราคาการต่ออายุกรมธรรม์ประกันภัยเดือน{{issue_date}}</p>
+    </section>
+    <section class="content">
+        <table>
+            <tr>
+                <td>บริษัทประกันภัย/ทะเบียนรถ</td>
+                <td>ชื่อผู้เอาประกัน</td>
+                <td>ทุนประกัน/ประเภทประกัน</td>
+                <td>เบี้ยประกัน</td>
+                <td>พ.ร.บ.</td>
+                <td>วันสิ้นสุด</td>
+            </tr>
+            {{#customers}}
+            <tr>
+                <td>{{customer_info.company_name}}<br/>{{customer_info.plate_number}}</td>
+                <td>{{customer_info.name}}</td>
+                <td>{{customer_info.insurance_amount}}</td>
+                <td>{{customer_info.amount}}</td>
+                <td>{{customer_info.act_amount}}</td>
+                <td>{{customer_info.end_date}}</td>
+            </tr>
+            {{/customers}}
+        </table>
+    </section>
+</body>
+
+</html>
