@@ -93,11 +93,13 @@ export class Quotation {
             if (!company) throw new Error400("company not found");
             if (!customer) throw new Error400("customer not found");
 
+            let customerName = ((customer.valueOf() as Customer).name.split("<br/>")[0]).split("/");
+
             let insuranceAmount = Number.parseFloat(c.insurance_amount.toString().replace(/,/g, ""));
             customerData.push({
                 company_name: (company as Company).name,
                 plate_number: (customer.valueOf() as Customer).plate_number,
-                name: (customer.valueOf() as Customer).name.split("<br/>")[0],
+                name: customerName[customerName.length - 1],
                 insurance_amount: Number.isNaN(insuranceAmount) ? c.insurance_amount : formatNumber(insuranceAmount),
                 amount: c.amount,
                 act_amount: c.act_amount,
