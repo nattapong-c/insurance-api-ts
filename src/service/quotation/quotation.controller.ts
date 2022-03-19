@@ -60,12 +60,32 @@ const exportPDF = (res: Response, quotation: Quotation) => {
 }
 
 export const createQuotation = async (req: Request, res: Response) => {
-    const quotation = await Quotation.create(req.body);
+    const quotation = await Quotation.upsert(req.body);
     return exportPDF(res, quotation);
 }
 
 export const getQuotations = async (req: Request, res: Response) => {
     const query = req.query as QuotationQuery;
     const response = await Quotation.getList(query);
+    res.send(response);
+}
+
+export const exportQuotation = async (req: Request, res: Response) => {
+    const { quotationId } = req.params;
+    const quotation = await Quotation.get(quotationId);
+    return exportPDF(res, quotation);
+}
+
+export const updateQuotation = async (req: Request, res: Response) => {
+    const { quotationId } = req.params;
+    const quotation = await Quotation.upsert(req.body, quotationId);
+    return exportPDF(res, quotation);
+}
+
+export const deleteQuotation = async (req: Request, res: Response) => {
+    const id_list = req.query.id_list as string[];
+    if (!id_list) return res.status(400).send("missing id_list");
+    var idList: string[] = Array.isArray(id_list) ? id_list : [id_list];
+    const response = await Quotation.delete(idList);
     res.send(response);
 }

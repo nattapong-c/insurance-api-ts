@@ -39,6 +39,15 @@ class QuotationListResponse {
     }
 }
 
+class QuotationResponse {
+    message: string = "get quotation success";
+    data?: Quotation;
+    constructor(message: string, data?: Quotation) {
+        this.message = message;
+        this.data = data;
+    }
+}
+
 export interface QuotationCustomer {
     company_name: string;
     plate_number: string;
@@ -60,7 +69,7 @@ export class Quotation {
         this.customers = customers;
     }
 
-    public static async create(quotationCreate: QuotationCreate): Promise<Quotation> {
+    public static async upsert(quotationCreate: QuotationCreate, quotationId?: string): Promise<Quotation> {
         var companyIdList = quotationCreate.customers.map(c => c.company_id);
         var customerIdList = quotationCreate.customers.map(c => c.customer_id);
 
@@ -97,7 +106,18 @@ export class Quotation {
         }
 
         var quotation = new Quotation(quotationCreate.issue_date, customerData);
-        return await QuotationSchema.create(quotation);
+        if (!quotationId) {
+            return await QuotationSchema.create(quotation);
+        } else {
+            var quotationUpdated = await QuotationSchema.findByIdAndUpdate(
+                { _id: quotationId },
+                { $set: quotation },
+                { new: true }
+            );
+            if (!quotationUpdated) throw new Error400("quotation not found");
+            return quotationUpdated;
+        }
+
     }
 
     public static async getList(quotationQuery: QuotationQuery) {
@@ -137,5 +157,16 @@ export class Quotation {
         const list = data.length > 0 && data[0].total_item ? data[0].quotations : data;
         const totalItem = data.length > 0 && data[0].total_item && data[0].total_item[0] ? data[0].total_item[0].count : list.length;
         return new QuotationListResponse(list, totalItem);
+    }
+
+    public static async get(quotationId: string): Promise<Quotation> {
+        const quotation = await QuotationSchema.findById(quotationId);
+        if (!quotation) throw new Error400("quotation not found");
+        return quotation;
+    }
+
+    public static async delete(idList: string[]): Promise<QuotationResponse> {
+        await QuotationSchema.deleteMany({ _id: { $in: idList } });
+        return new QuotationResponse("delete quotation success");
     }
 }
