@@ -47,22 +47,11 @@ const exportPDF = (res: Response, quotation: Quotation) => {
 
     let directory = path.join(__dirname, `../../../template/quotation.html`);
     let html = mustache.render(fs.readFileSync(directory, "utf8"), data);
-    // try {
-    //     pdf.create(html, { format: "A4", orientation: "landscape" }).toBuffer(async (err, buffer) => {
-    //         if (err || !Buffer.isBuffer(buffer)) {
-    //             return res.status(400).send({ error: `create pdf error : ${err}` });
-    //         }
-    //         return res.send(buffer);
-    //     });
-    // } catch (err) {
-    //     return res.status(400).send({ error: `create pdf error : ${err}` });
-    // }
     try {
-        pdf.create(html, { format: "A4", orientation: "landscape", directory: "../pdf" }).toFile(async (err, buffer) => {
-            // if (err || !Buffer.isBuffer(buffer)) {
-            //     return res.status(400).send({ error: `create pdf error : ${err}` });
-            // }
-            console.log(buffer.filename)
+        pdf.create(html, { format: "A4", orientation: "landscape" }).toBuffer(async (err, buffer) => {
+            if (err || !Buffer.isBuffer(buffer)) {
+                return res.status(400).send({ error: `create pdf error : ${err}` });
+            }
             return res.send(buffer);
         });
     } catch (err) {

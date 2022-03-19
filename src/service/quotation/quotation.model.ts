@@ -1,8 +1,13 @@
-import { ObjectId, PipelineStage } from "mongoose";
+import { ObjectId, PipelineStage, Types } from "mongoose";
 import QuotationSchema from "../../schema/Quotation";
+import CustomerSchema from "../../schema/Customer";
+import CompanySchema from "../../schema/Company";
 import { Error400 } from "../../utils/error";
 import { formatNumber } from "../../utils/number";
 import moment from "moment";
+import _ from "lodash";
+import { Customer } from "../customer/customer.model";
+import { Company } from "../company/company.model";
 
 export interface QuotationQuery {
     year?: Date,
@@ -12,7 +17,16 @@ export interface QuotationQuery {
 
 export interface QuotationCreate {
     issue_date: Date;
-    customers: Array<QuotationCustomer>;
+    customers: Array<QuotationCustomerCreate>;
+}
+
+export interface QuotationCustomerCreate {
+    company_id: string;
+    customer_id: string;
+    insurance_amount: string;
+    amount: number;
+    act_amount?: number;
+    end_date: Date;
 }
 
 class QuotationListResponse {
@@ -47,22 +61,42 @@ export class Quotation {
     }
 
     public static async create(quotationCreate: QuotationCreate): Promise<Quotation> {
-        var customers = quotationCreate.customers.map(c => {
+        var companyIdList = quotationCreate.customers.map(c => c.company_id);
+        var customerIdList = quotationCreate.customers.map(c => c.customer_id);
+
+        const [companies, customers] = await Promise.all([
+            CompanySchema.find({ _id: { $in: companyIdList } }),
+            CustomerSchema.find({ _id: { $in: customerIdList } })
+        ]);
+
+        var customerData: QuotationCustomer[] = [];
+
+        for (let c of quotationCreate.customers) {
             if (!c.insurance_amount) throw new Error400("missing insurance_amount");
-            if (!c.company_name) throw new Error400("missing company_name");
-            if (!c.plate_number) throw new Error400("missing plate_number");
-            if (!c.name) throw new Error400("missing name");
+            if (!c.company_id) throw new Error400("missing company_id");
+            if (!c.customer_id) throw new Error400("missing customer_id");
             if (!c.amount) throw new Error400("missing amount");
             if (!c.end_date) throw new Error400("missing end_date");
 
+            let company = _.find(companies, { _id: new Types.ObjectId(c.company_id) });
+            let customer = _.find(customers, { _id: new Types.ObjectId(c.customer_id) });
+
+            if (!company) throw new Error400("company not found");
+            if (!customer) throw new Error400("customer not found");
+
             let insuranceAmount = Number.parseFloat(c.insurance_amount.toString().replace(/,/g, ""));
-            return {
-                ...c,
+            customerData.push({
+                company_name: (company as Company).name,
+                plate_number: (customer.valueOf() as Customer).plate_number,
+                name: (customer.valueOf() as Customer).name.split("<br/>")[0],
                 insurance_amount: Number.isNaN(insuranceAmount) ? c.insurance_amount : formatNumber(insuranceAmount),
+                amount: c.amount,
+                act_amount: c.act_amount,
                 end_date: new Date(c.end_date)
-            }
-        });
-        var quotation = new Quotation(quotationCreate.issue_date, customers);
+            });
+        }
+
+        var quotation = new Quotation(quotationCreate.issue_date, customerData);
         return await QuotationSchema.create(quotation);
     }
 
