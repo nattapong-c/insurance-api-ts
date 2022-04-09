@@ -1,13 +1,13 @@
 import { sign, verify, SignOptions } from "jsonwebtoken";
-import ENV from '../config_env';
+import ENV from "../config_env";
 
 export class JWT {
   private privateKey: string;
   private publicKey: string;
   private config: SignOptions;
   constructor() {
-    this.privateKey = ENV.JWT_PRIVATE_KEY;
-    this.publicKey = ENV.JWT_PUBLIC_KEY;
+    this.privateKey = ENV.JWT_PRIVATE_KEY.replace("\\n", "\n");
+    this.publicKey = ENV.JWT_PUBLIC_KEY.replace("\\n", "\n");
     this.config = {
       algorithm: "RS256",
       expiresIn: "30d",

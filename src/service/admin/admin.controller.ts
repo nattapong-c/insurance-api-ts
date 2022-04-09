@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { JWT } from "../../utils/jwt";
 import { User } from "./admin.model";
-import ENV from "../../config_env";
 
 export const login = async (req: Request, res: Response) => {
   const { email } = req.body;
@@ -10,9 +9,8 @@ export const login = async (req: Request, res: Response) => {
   const user = await User.getByEmail(email);
   if (!user) return res.status(400).send({ error: "user not found" });
 
-  return res.send({ env: ENV.JWT_PRIVATE_KEY });
-  // const token = new JWT().jwtSign({ role: user.role, email: user.email });
-  // return res.send({ data: { token } });
+  const token = new JWT().jwtSign({ role: user.role, email: user.email });
+  return res.send({ data: { token } });
 };
 
 export const current = (req: Request, res: Response) => {
