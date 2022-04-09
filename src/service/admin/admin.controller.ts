@@ -9,9 +9,8 @@ export const login = async (req: Request, res: Response) => {
   const user = await User.getByEmail(email);
   if (!user) return res.status(400).send({ error: "user not found" });
 
-  return res.send({ prv: new JWT().privateKey, pub: new JWT().publicKey });
-  // const token = new JWT().jwtSign({ role: user.role, email: user.email });
-  // return res.send({ data: { token } });
+  const token = new JWT().jwtSign({ role: user.role, email: user.email });
+  return res.send({ data: { token } });
 };
 
 export const current = (req: Request, res: Response) => {

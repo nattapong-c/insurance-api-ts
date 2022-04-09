@@ -6,8 +6,8 @@ export class JWT {
   publicKey: string;
   private config: SignOptions;
   constructor() {
-    this.privateKey = ENV.JWT_PRIVATE_KEY.replace("\\n", "\n");
-    this.publicKey = ENV.JWT_PUBLIC_KEY.replace("\\n", "\n");
+    this.privateKey = ENV.JWT_PRIVATE_KEY.replace(/\\n/g, "\n");
+    this.publicKey = ENV.JWT_PUBLIC_KEY.replace(/\\n/g, "\n");
     this.config = {
       algorithm: "RS256",
       expiresIn: "30d",
